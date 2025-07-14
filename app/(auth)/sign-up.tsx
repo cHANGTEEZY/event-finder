@@ -10,7 +10,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text, TextInput, View, StyleSheet, Alert } from "react-native";
+import {
+  Text,
+  TextInput,
+  View,
+  StyleSheet,
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as z from "zod";
 
@@ -80,8 +88,8 @@ const SignUpScreen = () => {
       });
 
       if (signUpAttempt.status === "complete") {
-        await setActive({ session: signUpAttempt.createdSessionId });
-        router.replace("/");
+        // await setActive({ session: signUpAttempt.createdSessionId });
+        router.replace("/(auth)/sign-in");
       } else {
         console.error(JSON.stringify(signUpAttempt, null, 2));
         Alert.alert("Error", "Verification failed. Please try again.");
@@ -112,131 +120,132 @@ const SignUpScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 mx-8">
-      <View>
-        <AuthHeader
-          header="Create an account"
-          subHeader="Connect with your friends today!"
-        />
-
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView className="flex-1 mx-8">
         <View>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <CustomInput
-                onChangeText={onChange}
-                onBlur={onBlur}
-                label="Email Address"
-                value={value}
-                placeholder="Enter your email"
-                error={errors.email?.message}
-                keyboardType="email-address"
-                secureTextEntry={false}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            name="password"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <CustomInput
-                label="Password"
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                placeholder="Enter your password"
-                error={errors.password?.message}
-                showEyeIcon
-              />
-            )}
+          <AuthHeader
+            header="Create an account"
+            subHeader="Connect with your friends today!"
           />
 
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            name="confirmPassword"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <CustomInput
-                label="Confirm Password"
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                placeholder="Please confirm your password"
-                error={errors.confirmPassword?.message}
-                showEyeIcon
-              />
-            )}
-          />
-        </View>
+          <View>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <CustomInput
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  label="Email Address"
+                  value={value}
+                  placeholder="Enter your email"
+                  error={errors.email?.message}
+                  keyboardType="email-address"
+                  secureTextEntry={false}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              rules={{ required: true }}
+              name="password"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <CustomInput
+                  label="Password"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  placeholder="Enter your password"
+                  error={errors.password?.message}
+                  showEyeIcon
+                />
+              )}
+            />
 
-        <CustomButton
-          buttonText={isLoading ? "Creating Account..." : "Sign up"}
-          backgroundColor="#4e0189"
-          textColor="white"
-          textStyles={{ fontSize: 17 }}
-          onPress={handleSubmit(onSubmit)}
-          disabled={isLoading}
-        />
-
-        <Divider dividerText="Or With" />
-        <AuthButtons />
-      </View>
-
-      <View className="absolute bottom-20 left-[25%]">
-        <Text>
-          <Text className="text-muted">Already have an account? </Text>
-          <Link href={"/sign-in"} className="text-primary">
-            Sign in
-          </Link>
-        </Text>
-      </View>
-
-      <BottomDrawer
-        isVisible={pendingVerification}
-        onClose={closeVerification}
-        height={400}
-      >
-        <View style={styles.verificationContainer}>
-          <Text style={styles.verificationTitle}>Verify Your Email</Text>
-          <Text style={styles.verificationSubtitle}>
-            We've sent a verification code to your email address. Please enter
-            it below.
-          </Text>
-
-          <View style={styles.codeInputContainer}>
-            <Text style={styles.codeLabel}>Verification Code</Text>
-            <TextInput
-              style={styles.codeInput}
-              value={code}
-              onChangeText={setCode}
-              placeholder="Enter 6-digit code"
-              keyboardType="number-pad"
-              maxLength={6}
-              autoFocus
+            <Controller
+              control={control}
+              rules={{ required: true }}
+              name="confirmPassword"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <CustomInput
+                  label="Confirm Password"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  placeholder="Please confirm your password"
+                  error={errors.confirmPassword?.message}
+                  showEyeIcon
+                />
+              )}
             />
           </View>
 
           <CustomButton
-            buttonText={verificationLoading ? "Verifying..." : "Verify Email"}
+            buttonText={isLoading ? "Creating Account..." : "Sign up"}
             backgroundColor="#4e0189"
             textColor="white"
-            textStyles={{ fontSize: 16 }}
-            onPress={onVerifyPress}
-            disabled={verificationLoading || !code.trim()}
+            textStyles={{ fontSize: 17 }}
+            onPress={handleSubmit(onSubmit)}
+            disabled={isLoading}
           />
 
-          <View style={styles.resendContainer}>
-            <Text style={styles.resendText}>Didn't receive the code? </Text>
-            <Text style={styles.resendLink} onPress={handleResendCode}>
-              Resend Code
-            </Text>
-          </View>
+          <Divider dividerText="Or With" />
+          <AuthButtons />
         </View>
-      </BottomDrawer>
 
-    </SafeAreaView>
+        <View className="absolute bottom-20 left-[25%]">
+          <Text>
+            <Text className="text-muted">Already have an account? </Text>
+            <Link href={"/sign-in"} className="text-primary">
+              Sign in
+            </Link>
+          </Text>
+        </View>
+
+        <BottomDrawer
+          isVisible={pendingVerification}
+          onClose={closeVerification}
+          height={400}
+        >
+          <View style={styles.verificationContainer}>
+            <Text style={styles.verificationTitle}>Verify Your Email</Text>
+            <Text style={styles.verificationSubtitle}>
+              We've sent a verification code to your email address. Please enter
+              it below.
+            </Text>
+
+            <View style={styles.codeInputContainer}>
+              <Text style={styles.codeLabel}>Verification Code</Text>
+              <TextInput
+                style={styles.codeInput}
+                value={code}
+                onChangeText={setCode}
+                placeholder="Enter 6-digit code"
+                keyboardType="number-pad"
+                maxLength={6}
+                autoFocus
+              />
+            </View>
+
+            <CustomButton
+              buttonText={verificationLoading ? "Verifying..." : "Verify Email"}
+              backgroundColor="#4e0189"
+              textColor="white"
+              textStyles={{ fontSize: 16 }}
+              onPress={onVerifyPress}
+              disabled={verificationLoading || !code.trim()}
+            />
+
+            <View style={styles.resendContainer}>
+              <Text style={styles.resendText}>Didn't receive the code? </Text>
+              <Text style={styles.resendLink} onPress={handleResendCode}>
+                Resend Code
+              </Text>
+            </View>
+          </View>
+        </BottomDrawer>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

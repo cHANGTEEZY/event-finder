@@ -7,6 +7,8 @@ import {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -105,7 +107,12 @@ const BottomDrawer = ({
           {...panResponder.panHandlers}
         >
           <View style={styles.handle} />
-          <View style={styles.content}>{children}</View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.content}
+          >
+            {children}
+          </KeyboardAvoidingView>
         </Animated.View>
       </View>
     </Modal>
@@ -145,7 +152,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
 });
 
