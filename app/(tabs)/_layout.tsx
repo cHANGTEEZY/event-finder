@@ -1,11 +1,11 @@
 import React from "react";
 import { Redirect, Slot } from "expo-router";
-import useAuthStore from "@/store/auth.store";
+import { useAuth } from "@clerk/clerk-expo";
 
 const ComponentName = () => {
-  const { isAuthenticated } = useAuthStore();
+  const {isSignedIn} = useAuth()
 
-  if (!isAuthenticated) {
+  if (!isSignedIn) {
     return <Redirect href={"/(auth)/sign-in"} />;
   }
 

@@ -54,7 +54,6 @@ const SignInScreen = () => {
                 keyboardType="email-address"
                 placeholder="Enter your email"
                 error={errors.email?.message}
-                secureTextEntry={false}
               />
             )}
           />
@@ -70,7 +69,7 @@ const SignInScreen = () => {
                 value={value}
                 placeholder="Enter your password"
                 error={errors.password?.message}
-                secureTextEntry={true}
+                showEyeIcon
               />
             )}
           />

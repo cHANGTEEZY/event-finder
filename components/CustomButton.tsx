@@ -21,6 +21,7 @@ interface CustomButtonProps {
   buttonStyles?: StyleProp<ViewStyle>;
   textStyles?: StyleProp<TextStyle>;
   onPress?: () => void;
+  isLoading?: boolean
 }
 
 const CustomButton = ({
@@ -32,6 +33,7 @@ const CustomButton = ({
   buttonStyles,
   onPress,
   textStyles,
+  isLoading
 }: CustomButtonProps) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
@@ -48,9 +50,13 @@ const CustomButton = ({
         {hasImage && (
           <Image
             source={imageSource || require("@/assets/images/favicon.png")}
+            resizeMode="contain"
+            className="w-5 h-5"
           />
         )}
-        <Text style={[{ color: textColor }, textStyles]}>{buttonText}</Text>
+        <Text style={[{ color: textColor }, textStyles]}>
+          {isLoading ? "loading..." :  buttonText }
+        </Text>
       </View>
     </TouchableOpacity>
   );

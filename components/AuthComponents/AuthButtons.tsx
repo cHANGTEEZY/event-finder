@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import React from "react";
 import CustomButton from "@/components/CustomButton";
+import { Google,Github } from "@/assets/images";
 
 const AuthButtons = () => {
   const handleGooglePress = () => {
@@ -14,10 +15,10 @@ const AuthButtons = () => {
   return (
     <View className="flex-row gap-2">
       <View className="flex-1">
-        <CustomButton buttonText="Google" onPress={handleGooglePress} />
+        <CustomButton buttonText="Google" onPress={handleGooglePress} imageSource={Google} hasImage />
       </View>
       <View className="flex-1">
-        <CustomButton buttonText="Github" onPress={handleGithubPress} />
+        <CustomButton buttonText="Github" onPress={handleGithubPress} imageSource={Github} hasImage />
       </View>
     </View>
   );
