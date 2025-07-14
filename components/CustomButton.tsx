@@ -4,7 +4,7 @@ import {
   Image,
   StyleProp,
   StyleSheet,
-  TouchableOpacity, // Only TouchableOpacity is needed for this behavior
+  TouchableOpacity, 
 } from "react-native";
 import React from "react";
 import {
@@ -21,7 +21,8 @@ interface CustomButtonProps {
   buttonStyles?: StyleProp<ViewStyle>;
   textStyles?: StyleProp<TextStyle>;
   onPress?: () => void;
-  isLoading?: boolean
+  isLoading?: boolean;
+  disabled?:boolean
 }
 
 const CustomButton = ({
@@ -33,10 +34,11 @@ const CustomButton = ({
   buttonStyles,
   onPress,
   textStyles,
-  isLoading
+  isLoading,
+  disabled,
 }: CustomButtonProps) => {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7} disabled={disabled}>
       <View
         style={[
           {
@@ -55,7 +57,7 @@ const CustomButton = ({
           />
         )}
         <Text style={[{ color: textColor }, textStyles]}>
-          {isLoading ? "loading..." :  buttonText }
+          {isLoading ? "loading..." : buttonText}
         </Text>
       </View>
     </TouchableOpacity>

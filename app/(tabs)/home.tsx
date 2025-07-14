@@ -1,11 +1,19 @@
-import { Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 import React from "react";
+import { useAuth, useClerk } from "@clerk/clerk-expo";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomePage = () => {
+   const {isSignedIn}=  useAuth()
+   const {signOut} = useClerk()
+
+   console.log(isSignedIn)
+
   return (
-    <View>
+    <SafeAreaView>
       <Text>HomePage</Text>
-    </View>
+      <Button title="logout" onPress={()=> signOut()}/>
+    </SafeAreaView>
   );
 };
 

@@ -3,14 +3,15 @@ import AuthHeader from "@/components/AuthComponents/AuthHeader";
 import CustomButton from "@/components/CustomButton";
 import CustomInput from "@/components/CustomInput";
 import Divider from "@/components/Divider";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {useForm, Controller} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import { baseSchema } from "@/schema/auth-schema";
 import * as z from "zod"
-import useAuthStore from "@/store/auth.store";
+import { useSignIn } from "@clerk/clerk-expo";
+import { useCallback } from "react";
 
 
 type IsignInForm =  z.infer<typeof baseSchema>;
@@ -25,12 +26,39 @@ const SignInScreen = () => {
     mode: "onChange",
     reValidateMode: "onSubmit",
   });
-  const {setIsAuthenticated} =useAuthStore()
+  const router = useRouter();
 
-  const onSubmit = (data: IsignInForm) => {
-    console.log("data is", data);
-    setIsAuthenticated(true);
-  };
+  const {signIn,setActive,isLoaded} = useSignIn();
+
+  const onSubmit = useCallback(
+    async (data: IsignInForm) => {
+      const email = data.email;
+      const password = data.password;
+
+      if (!isLoaded) return;
+
+      try {
+        const signInAttempt = await signIn.create({
+          identifier: email,
+          password,
+        });
+
+        if (signInAttempt.status === "complete") {
+          await setActive({ session: signInAttempt.createdSessionId });
+          router.replace("/");
+        } else {
+          console.error(
+            "Sign-in not complete",
+            JSON.stringify(signInAttempt, null, 2)
+          );
+        }
+      } catch (err) {
+        console.error("Sign-in error", JSON.stringify(err, null, 2));
+      }
+    },
+    [isLoaded, signIn, setActive, router]
+  );
+
 
   return (
     <SafeAreaView className="flex-1 mx-8">
