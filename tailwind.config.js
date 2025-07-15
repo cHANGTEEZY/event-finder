@@ -7,8 +7,11 @@ module.exports = {
     extend: {
       colors: {
         primary: "#4e0189",
-        muted: "#1f1f1f"
-      }
+        accent: "#a995ce",
+        secondaty: "#2f3a4b",
+        muted: "#1f1f1f",
+        background: "#222834",
+      },
     },
   },
   plugins: [],

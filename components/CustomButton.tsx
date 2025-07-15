@@ -4,7 +4,7 @@ import {
   Image,
   StyleProp,
   StyleSheet,
-  TouchableOpacity, 
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import {
@@ -22,7 +22,7 @@ interface CustomButtonProps {
   textStyles?: StyleProp<TextStyle>;
   onPress?: () => void;
   isLoading?: boolean;
-  disabled?:boolean
+  disabled?: boolean;
 }
 
 const CustomButton = ({
@@ -47,7 +47,7 @@ const CustomButton = ({
           buttonStyles,
           styles.containerStyles,
         ]}
-        className={`items-center justify-center gap-4 border border-[#20309a]`}
+        className={`items-center justify-center gap-4 `}
       >
         {hasImage && (
           <Image
