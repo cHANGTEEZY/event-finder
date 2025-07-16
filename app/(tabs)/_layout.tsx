@@ -25,7 +25,7 @@ const TabBarIcon = ({
   size = 60,
 }: TabBarProps) => {
   return (
-    <View className={``}>
+    <View className={`${focused ? " " : ""}`}>
       <LottieView
         source={icon}
         style={{

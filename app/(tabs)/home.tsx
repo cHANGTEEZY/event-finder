@@ -3,6 +3,7 @@ import {
   Dimensions,
   ImageBackground,
   Pressable,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,13 +14,22 @@ import CustomButton from "@/components/CustomButton";
 import { COLORS } from "@/lib/colors";
 import Carousel from "react-native-reanimated-carousel";
 import { CarouselData } from "@/constants/CarouselData";
+import PastEvents from "@/components/HomeComponents/PastEvents";
+import { ScrollView } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ComponentHeader from "@/components/HomeComponents/ComponentHeader";
 
 const height = Dimensions.get("screen").height;
 const width = Dimensions.get("screen").width;
 
 const HomePage = () => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View className={`bg-background flex-1`}>
+    <ScrollView
+      className={`bg-background flex-1`}
+      contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
+    >
       <View className="relative mb-6">
         <ImageBackground
           source={BackgroundImage}
@@ -56,17 +66,15 @@ const HomePage = () => {
       </View>
 
       <View className="m-8">
-        <View className="flex-row justify-between mb-6">
-          <Text className="text-[16px] text-white">Events in your city</Text>
-          <TouchableOpacity activeOpacity={0.7}>
-            <Text className="text-accent">See all</Text>
-          </TouchableOpacity>
-        </View>
+        <ComponentHeader
+          headingText="Events in your city"
+          navText="See all"
+          onPress={() => console.log("Pressed")}
+        />
 
         <Carousel
-          // loop={false}
           width={width}
-          height={height}
+          height={height * 0.25}
           data={CarouselData}
           scrollAnimationDuration={600}
           renderItem={({ item }) => (
@@ -85,8 +93,10 @@ const HomePage = () => {
             </View>
           )}
         />
+
+        <PastEvents />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
