@@ -9,14 +9,16 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.changteezy.Event"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.changteezy.Event"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +39,17 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "splash": {
+      "image": "./assets/images/splash.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a1f90b6e-9d9b-4586-8578-5d2c3a1001d8"
+      }
     }
   }
 }

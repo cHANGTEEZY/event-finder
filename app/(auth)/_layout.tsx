@@ -20,8 +20,7 @@ const AuthLayout = () => {
         options={{ headerShown: false, animation: "slide_from_right" }}
       />
 
-      <Stack.Screen name="forgot-password" options={{headerShown: false}} />
-
+      <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
     </Stack>
   );
 };

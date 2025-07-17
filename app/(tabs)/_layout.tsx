@@ -5,9 +5,10 @@ import { useAuth } from "@clerk/clerk-expo";
 import { Redirect, Tabs } from "expo-router";
 import LottieView from "lottie-react-native";
 import React from "react";
-import { Platform, Text, View } from "react-native";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
 import type { AnimationObject } from "lottie-react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import HapticButton from "@/components/HapticButton";
 
 interface TabBarProps {
   text?: string;
@@ -98,6 +99,7 @@ const HomeLayout = () => {
               />
             );
           },
+          tabBarButton: HapticButton,
         }}
       />
       <Tabs.Screen
@@ -114,6 +116,7 @@ const HomeLayout = () => {
               />
             );
           },
+          tabBarButton: HapticButton,
         }}
       />
       <Tabs.Screen
@@ -125,6 +128,7 @@ const HomeLayout = () => {
               <TabBarIcon icon={Profile} focused={focused} positioning={22} />
             );
           },
+          tabBarButton: HapticButton,
         }}
       />
     </Tabs>

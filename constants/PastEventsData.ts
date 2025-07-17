@@ -43,3 +43,6 @@ export const PastEventsData = [
     image: PastEventsImage2,
   },
 ];
+
+//haptic feedback on atb bar
+//splash screen

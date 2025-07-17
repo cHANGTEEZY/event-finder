@@ -18,6 +18,7 @@ import PastEvents from "@/components/HomeComponents/PastEvents";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ComponentHeader from "@/components/HomeComponents/ComponentHeader";
+import Card from "@/components/Card";
 
 const height = Dimensions.get("screen").height;
 const width = Dimensions.get("screen").width;
@@ -78,18 +79,14 @@ const HomePage = () => {
           data={CarouselData}
           scrollAnimationDuration={600}
           renderItem={({ item }) => (
-            <View style={styles.carouselCard}>
-              <ImageBackground
-                source={item.image}
-                style={styles.imageBackground}
-                imageStyle={{ borderRadius: 18 }}
-                resizeMode="cover"
-              >
-                <View style={styles.cardContent}>
-                  <Text style={styles.artistName}>{item.artistName}</Text>
-                  <Text style={styles.dateText}>{item.eventData}</Text>
-                </View>
-              </ImageBackground>
+            <View className="mr-16">
+              <Card
+                key={item.id}
+                id={item.id}
+                image={item.image}
+                artistName={item.artistName}
+                eventData={item.eventData}
+              />
             </View>
           )}
         />
@@ -106,34 +103,5 @@ const styles = StyleSheet.create({
   coverImage: {
     height: height * 0.35,
     width: "100%",
-  },
-  carouselCard: {
-    height: height * 0.22,
-    width: width - 50,
-    borderRadius: 18,
-    marginRight: 12,
-  },
-  imageBackground: {
-    height: "100%",
-    width: "100%",
-    borderRadius: 18,
-    overflow: "hidden",
-  },
-  cardContent: {
-    position: "absolute",
-    bottom: 16,
-    left: 16,
-    right: 16,
-  },
-  artistName: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  dateText: {
-    color: "white",
-    fontSize: 12,
-    opacity: 0.8,
   },
 });

@@ -9,8 +9,16 @@ import PastEventsImage1 from "./Rectangle 25.png";
 import PastEventsImage2 from "./Rectangle 26.png";
 import PastEventsImage3 from "./Rectangle 27.png";
 import PastEventsImage4 from "./Rectangle 28.png";
+import EventsPageBackground from "./eventsBg.png";
+import WhiteHeart from "./heart.png";
+import BlackHeart from "./heartBlack.png";
+import SplashScreenImage from "./splash.jpg";
 
 export {
+  SplashScreenImage,
+  WhiteHeart,
+  BlackHeart,
+  EventsPageBackground,
   Google,
   Github,
   Eye,
