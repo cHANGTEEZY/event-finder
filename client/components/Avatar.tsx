@@ -12,7 +12,7 @@ const Avatar = ({ imageUrl, fallbackText = "SG" }: AvatarProps) => {
 
   return (
     <View
-      className="rounded-full items-center justify-center bg-accent overflow-hidden "
+      className="rounded-md   items-center justify-center bg-accent overflow-hidden "
       style={{ height: 100, width: 100 }}
     >
       {showImage ? (

@@ -3,7 +3,7 @@ import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { Slot, SplashScreen } from "expo-router";
 import Constants from "expo-constants";
 import "./globals.css";
-import { StatusBar } from "react-native";
+import { ActivityIndicator, StatusBar, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { useEffect, useCallback } from "react";
@@ -15,15 +15,22 @@ function AuthGate({ children }: { children: React.ReactNode }) {
 
   const onReady = useCallback(async () => {
     if (isLoaded) {
+      await new Promise((res) => setTimeout(res, 2000));
       await SplashScreen.hideAsync();
     }
   }, [isLoaded]);
 
   useEffect(() => {
     onReady();
-  }, [isLoaded]);
+  }, [onReady]);
 
-  if (!isLoaded) return null;
+  if (!isLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
 
   return <>{children}</>;
 }

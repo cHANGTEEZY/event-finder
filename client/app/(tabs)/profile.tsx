@@ -1,8 +1,8 @@
-import Avatar from "@/components/Avatar";
-import { COLORS } from "@/lib/colors";
+import SettingsCard from "@/components/ProfileComponents/SettingsCard";
+import Avatar from "../../components/Avatar";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Profile = () => {
@@ -19,7 +19,6 @@ const Profile = () => {
     if (first && last) {
       return `${first[0]}${last[0]}`.toUpperCase();
     }
-
     const fullName = user.fullName || "";
     const nameParts = fullName.trim().split(" ");
 
@@ -65,7 +64,85 @@ const Profile = () => {
           </View>
         </SafeAreaView>
       </View>
-      <Button title="Sign Out" onPress={() => signOut()} />
+
+      <View className="mx-6">
+        <Text className="text-mutedWhite text-lg">Other pages & Settings</Text>
+
+        <View
+          className="bg-accent/20 p-5 mt-4 gap-3"
+          style={{ borderRadius: 10 }}
+        >
+          <SettingsCard
+            leftIconName="bookmark"
+            leftIconColor="white"
+            settingText="Wishlist"
+            rightIconName="chevron-forward"
+            rightIconColor="white"
+            iconSize={20}
+            textStyles={{ fontSize: 20, color: "white", fontWeight: "400" }}
+            onPress={() => console.log("Wishlist")}
+          />
+          <SettingsCard
+            leftIconName="bookmark"
+            leftIconColor="white"
+            settingText="History"
+            rightIconName="chevron-forward"
+            rightIconColor="white"
+            iconSize={20}
+            textStyles={{ fontSize: 20, color: "white" }}
+            onPress={() => console.log("Wishlist")}
+          />
+        </View>
+
+        <View
+          className="bg-accent/20 p-5 mt-4 gap-3"
+          style={{ borderRadius: 10 }}
+        >
+          <SettingsCard
+            leftIconName="card"
+            leftIconColor="white"
+            settingText="Payment Method"
+            rightIconName="chevron-forward"
+            rightIconColor="white"
+            iconSize={20}
+            textStyles={{ fontSize: 20, color: "white" }}
+            onPress={() => console.log("Wishlist")}
+          />
+          <SettingsCard
+            leftIconName="notifications"
+            leftIconColor="white"
+            settingText="Notifications"
+            rightIconName="chevron-forward"
+            rightIconColor="white"
+            iconSize={20}
+            textStyles={{ fontSize: 20, color: "white" }}
+            onPress={() => console.log("Wishlist")}
+          />
+          <SettingsCard
+            leftIconName="shield-checkmark"
+            leftIconColor="white"
+            settingText="Privacy Policy"
+            rightIconName="chevron-forward"
+            rightIconColor="white"
+            iconSize={20}
+            textStyles={{ fontSize: 20, color: "white" }}
+            onPress={() => console.log("Wishlist")}
+          />
+        </View>
+
+        <View className="bg-red-600 p-5 mt-4" style={{ borderRadius: 10 }}>
+          <SettingsCard
+            leftIconName="log-out-outline"
+            leftIconColor="white"
+            settingText="Logout"
+            rightIconName="chevron-forward"
+            rightIconColor="white"
+            iconSize={20}
+            textStyles={{ fontSize: 20, color: "white" }}
+            onPress={() => signOut()}
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -76,7 +153,5 @@ const styles = StyleSheet.create({
   profileHeaderContainer: {
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-
-    // backgroundColor: COLORS.secondary,
   },
 });

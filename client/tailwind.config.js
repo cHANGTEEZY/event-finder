@@ -11,6 +11,7 @@ module.exports = {
         secondaty: "#2f3a4b",
         muted: "#1f1f1f",
         background: "#222834",
+        mutedWhite: "#f0ede4",
       },
     },
   },
