@@ -274,6 +274,8 @@ const SignUpScreen = () => {
         isVisible={pendingVerification}
         onClose={closeVerification}
         height={400}
+        keyboardAvoidingMovesDrawer
+        keyboardVerticalOffset={0}
       >
         <View style={styles.verificationContainer}>
           <Text style={styles.verificationTitle}>Verify Your Email</Text>

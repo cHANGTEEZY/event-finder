@@ -1,5 +1,5 @@
 import { EventsPageBackground } from "@/assets/images";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   ImageBackground,
   Platform,
+  Dimensions,
+  KeyboardAvoidingView,
 } from "react-native";
 import {
   SafeAreaView,
@@ -18,10 +20,25 @@ import Card from "@/components/Card";
 import HapticButton from "@/components/HapticButton";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Haptics from "expo-haptics";
+import Header from "@/components/Header";
+import BottomDrawer from "@/components/BottomDrawer";
+import EventForm from "@/components/EventComponents/EventForm";
+
+const height = Dimensions.get("screen").height;
 
 export default function App() {
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+
   const inset = useSafeAreaInsets();
   const paddingBottom = Platform.OS === "ios" ? 100 : 120;
+
+  const closeDrawer = () => {
+    setIsDrawerVisible(false);
+  };
+
+  const toggleDrawer = () => {
+    setIsDrawerVisible((prev) => !prev);
+  };
 
   return (
     <View className="flex-1 ">
@@ -33,9 +50,16 @@ export default function App() {
         <View style={styles.overlay} />
 
         <SafeAreaView className="mx-10">
-          <Text className="text-3xl text-white text-center mt-6">
-            Your events
-          </Text>
+          <Header
+            leftIconName="arrow-back-outline"
+            leftIconSize={25}
+            headerName="Events"
+            textStyles={{ fontSize: 20, fontWeight: 400, color: "white" }}
+            rightIconName="add-circle-outline"
+            rightIconSize={30}
+            righIconPress={toggleDrawer}
+          />
+
           <SwipeListView
             contentContainerStyle={{
               paddingBottom: inset.bottom + paddingBottom,
@@ -84,6 +108,14 @@ export default function App() {
             rightOpenValue={-100}
           />
         </SafeAreaView>
+
+        <BottomDrawer
+          isVisible={isDrawerVisible}
+          onClose={closeDrawer}
+          height={height * 0.8}
+        >
+          <EventForm handleCloseModal={closeDrawer} />
+        </BottomDrawer>
       </ImageBackground>
     </View>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Modal,
@@ -9,6 +9,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from "react-native";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -18,6 +19,8 @@ type BottomDrawerProps = {
   isVisible: boolean;
   onClose: () => void;
   height?: number;
+  keyboardAvoidingMovesDrawer?: boolean;
+  keyboardVerticalOffset?: number;
 };
 
 const BottomDrawer = ({
@@ -25,15 +28,47 @@ const BottomDrawer = ({
   isVisible,
   onClose,
   height = SCREEN_HEIGHT * 0.4,
+  keyboardAvoidingMovesDrawer = false,
+  keyboardVerticalOffset,
 }: BottomDrawerProps) => {
   const translateY = useRef(new Animated.Value(height)).current;
   const lastGestureDy = useRef(0);
+  const [internalVisible, setInternalVisible] = useState(isVisible);
+
+  const openDrawer = () => {
+    Animated.spring(translateY, {
+      toValue: 0,
+      useNativeDriver: true,
+      tension: 100,
+      friction: 8,
+    }).start();
+  };
+
+  const closeDrawer = () => {
+    Animated.spring(translateY, {
+      toValue: height,
+      useNativeDriver: true,
+      tension: 100,
+      friction: 8,
+    }).start(() => {
+      setInternalVisible(false);
+      Keyboard.dismiss();
+    });
+  };
+
+  useEffect(() => {
+    if (isVisible) {
+      setInternalVisible(true);
+      openDrawer();
+    } else {
+      closeDrawer();
+    }
+  }, [isVisible, height]);
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponder: (_, gestureState) => {
-      return Math.abs(gestureState.dy) > 10;
-    },
+    onMoveShouldSetPanResponder: (_, gestureState) =>
+      Math.abs(gestureState.dy) > 10,
     onPanResponderGrant: () => {
       translateY.setOffset(lastGestureDy.current);
     },
@@ -54,68 +89,67 @@ const BottomDrawer = ({
     },
   });
 
-  const openDrawer = () => {
-    Animated.spring(translateY, {
-      toValue: 0,
-      useNativeDriver: true,
-      tension: 100,
-      friction: 8,
-    }).start();
-  };
+  if (!internalVisible) return null;
 
-  const closeDrawer = () => {
-    Animated.spring(translateY, {
-      toValue: height,
-      useNativeDriver: true,
-      tension: 100,
-      friction: 8,
-    }).start(() => {
-      onClose();
-    });
-  };
+  const offset = keyboardAvoidingMovesDrawer
+    ? 0
+    : keyboardVerticalOffset !== undefined
+      ? keyboardVerticalOffset
+      : Platform.OS === "ios"
+        ? height * 0.1
+        : 0;
 
-  useEffect(() => {
-    if (isVisible) {
-      openDrawer();
-    } else {
-      translateY.setValue(height);
-    }
-  }, [isVisible]);
+  const drawerContent = (
+    <View style={styles.overlay}>
+      <TouchableOpacity
+        style={styles.backdrop}
+        activeOpacity={1}
+        onPress={closeDrawer}
+      />
+      <Animated.View
+        style={[
+          styles.drawer,
+          {
+            height,
+            transform: [{ translateY }],
+          },
+        ]}
+        {...panResponder.panHandlers}
+      >
+        <View style={styles.handle} />
+        {keyboardAvoidingMovesDrawer ? (
+          <View style={styles.content}>{children}</View>
+        ) : (
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.content}
+            keyboardVerticalOffset={offset}
+          >
+            {children}
+          </KeyboardAvoidingView>
+        )}
+      </Animated.View>
+    </View>
+  );
 
   return (
     <Modal
-      visible={isVisible}
+      visible={internalVisible}
       transparent
       statusBarTranslucent
       animationType="fade"
       onRequestClose={onClose}
     >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        // keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
-      >
-        <View style={styles.overlay}>
-          <TouchableOpacity
-            style={styles.backdrop}
-            activeOpacity={1}
-            onPress={closeDrawer}
-          />
-          <Animated.View
-            style={[
-              styles.drawer,
-              {
-                height,
-                transform: [{ translateY }],
-              },
-            ]}
-            {...panResponder.panHandlers}
-          >
-            <View style={styles.handle} />
-            <View style={styles.content}>{children}</View>
-          </Animated.View>
-        </View>
-      </KeyboardAvoidingView>
+      {keyboardAvoidingMovesDrawer ? (
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          {drawerContent}
+        </KeyboardAvoidingView>
+      ) : (
+        drawerContent
+      )}
     </Modal>
   );
 };
@@ -134,13 +168,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
+    shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    overflow: "hidden",
   },
   handle: {
     width: 40,
@@ -148,8 +180,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
     borderRadius: 2,
     alignSelf: "center",
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: 10,
   },
   content: {
     flex: 1,
