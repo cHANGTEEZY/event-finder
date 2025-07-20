@@ -1,12 +1,12 @@
+import "./globals.css";
+import { useEffect, useCallback } from "react";
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { Slot, SplashScreen } from "expo-router";
-import Constants from "expo-constants";
-import "./globals.css";
 import { ActivityIndicator, StatusBar, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
-import { useEffect, useCallback } from "react";
+import Constants from "expo-constants";
 
 SplashScreen.preventAutoHideAsync();
 
