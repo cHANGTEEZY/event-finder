@@ -24,6 +24,7 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import * as z from "zod";
 
 type ISignUpForm = z.infer<typeof signUpSchema>;
@@ -79,8 +80,12 @@ const SignUpScreen = () => {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setPendingVerification(true);
     } catch (err) {
+      Toast.show({
+        type: "error",
+        text1: "Failed to create account",
+        text2: `${err?.errors[0]?.message}`,
+      });
       console.error(JSON.stringify(err, null, 2));
-      Alert.alert("Error", "Failed to create account. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -101,12 +106,20 @@ const SignUpScreen = () => {
 
       if (signUpAttempt.status === "complete") {
         await setActive({ session: signUpAttempt.createdSessionId });
+        Toast.show({
+          type: "success",
+          text1: "Logging in",
+        });
         router.replace("/(auth)/sign-in");
       } else {
         console.error(JSON.stringify(signUpAttempt, null, 2));
         Alert.alert("Error", "Verification failed. Please try again.");
       }
     } catch (err) {
+      Toast.show({
+        type: "error",
+        text1: `${err}`,
+      });
       console.error(JSON.stringify(err, null, 2));
       Alert.alert("Error", "Invalid verification code. Please try again.");
     } finally {
@@ -141,6 +154,7 @@ const SignUpScreen = () => {
           />
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 120}
           >
             <Controller
               control={control}

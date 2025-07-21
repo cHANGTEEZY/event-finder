@@ -17,7 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { baseSchema } from "@/schema/auth-schema";
 import * as z from "zod";
 import { useSignIn } from "@clerk/clerk-expo";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import Toast from "react-native-toast-message";
 
 type IsignInForm = z.infer<typeof baseSchema>;
 
@@ -38,9 +39,12 @@ const SignInScreen = () => {
   const router = useRouter();
 
   const { signIn, setActive, isLoaded } = useSignIn();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = useCallback(
     async (data: IsignInForm) => {
+      setIsLoading(true);
+
       const email = data.email;
       const password = data.password;
 
@@ -54,6 +58,10 @@ const SignInScreen = () => {
 
         if (signInAttempt.status === "complete") {
           await setActive({ session: signInAttempt.createdSessionId });
+          Toast.show({
+            type: "success",
+            text1: "Logging in",
+          });
           router.replace("/");
         } else {
           console.error(
@@ -62,7 +70,14 @@ const SignInScreen = () => {
           );
         }
       } catch (err) {
+        Toast.show({
+          type: "error",
+          text1: "Something went wrong",
+          text2: `${err}`,
+        });
         console.error("Sign-in error", JSON.stringify(err, null, 2));
+      } finally {
+        setIsLoading(false);
       }
     },
     [isLoaded, signIn, setActive, router]
@@ -120,11 +135,12 @@ const SignInScreen = () => {
               </TouchableOpacity>
 
               <CustomButton
-                buttonText="Login"
+                buttonText={!isLoading ? "Login" : "Logging in...."}
                 backgroundColor="#4e0189"
                 textColor="white"
                 textStyles={{ fontSize: 17 }}
                 onPress={handleSubmit(onSubmit)}
+                disabled={isLoading}
               />
             </View>
 

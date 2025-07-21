@@ -25,7 +25,6 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="event"/>
-        <data android:scheme="exp+event"/>
       </intent-filter>
     </activity>
   </application>

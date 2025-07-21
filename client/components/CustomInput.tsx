@@ -17,6 +17,7 @@ interface CustomInputProps extends TextInputProps {
   error?: string;
   placeholder?: string;
   showEyeIcon?: boolean;
+  onPressIn?: (event: any) => void;
 }
 
 const CustomInput = ({
@@ -25,6 +26,7 @@ const CustomInput = ({
   error,
   placeholder,
   showEyeIcon = false,
+  onPressIn,
   ...props
 }: CustomInputProps) => {
   const [eyePressed, setEyePressed] = useState(false);
@@ -52,6 +54,7 @@ const CustomInput = ({
             placeholder={placeholder}
             placeholderTextColor={error ? "#ef4444" : "#1f1f1f"}
             secureTextEntry={!eyePressed ? true : false}
+            onPressIn={onPressIn}
             {...props}
           />
           {showEyeIcon && (

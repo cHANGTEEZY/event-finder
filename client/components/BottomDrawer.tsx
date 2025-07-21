@@ -36,20 +36,20 @@ const BottomDrawer = ({
   const [internalVisible, setInternalVisible] = useState(isVisible);
 
   const openDrawer = () => {
-    Animated.spring(translateY, {
+    Animated.timing(translateY, {
       toValue: 0,
       useNativeDriver: true,
-      tension: 100,
-      friction: 8,
+      // tension: 100,
+      duration: 200,
     }).start();
   };
 
   const closeDrawer = () => {
-    Animated.spring(translateY, {
+    Animated.timing(translateY, {
       toValue: height,
       useNativeDriver: true,
-      tension: 100,
-      friction: 8,
+      // tension: 100,
+      duration: 200,
     }).start(() => {
       setInternalVisible(false);
       Keyboard.dismiss();
