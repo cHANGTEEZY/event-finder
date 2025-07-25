@@ -7,6 +7,7 @@ import { ActivityIndicator, StatusBar, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import Constants from "expo-constants";
+import { useFonts } from "expo-font";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,11 +21,19 @@ function AuthGate({ children }: { children: React.ReactNode }) {
     }
   }, [isLoaded]);
 
+  const [fontsLoaded] = useFonts({
+    DMSANS: require("../assets/fonts/DMSANSREGULAR.ttf"),
+    DMSANSMEDIUM: require("../assets/fonts/DMSANSMEDIUM.ttf"),
+    DMSANSSEMIBOLD: require("../assets/fonts/DMSANSSEMIBOLD.ttf"),
+    DMSANSBOLD: require("../assets/fonts/DMSANSBOLD.ttf"),
+    DMSANSEXTRABOLD: require("../assets/fonts/DMSANSEXTRABOLD.ttf"),
+  });
+
   useEffect(() => {
     onReady();
   }, [onReady]);
 
-  if (!isLoaded) {
+  if (!isLoaded && !fontsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#007AFF" />

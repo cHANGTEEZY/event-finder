@@ -13,6 +13,13 @@ module.exports = {
         background: "#222834",
         mutedWhite: "#f0ede4",
       },
+      fontFamily: {
+        DMSANS: ["DMSANS"],
+        DMSANSMEDIUM: ["DMSANSMEDIUM"],
+        DMSANSSEMIBOLD: ["DMSANSSEMIBOLD"],
+        DMSANSBOLD: ["DMSANSBOLD"],
+        DMSANSEXTRABOLD: ["DMSANSEXTRABOLD"],
+      },
     },
   },
   plugins: [],

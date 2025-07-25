@@ -39,7 +39,7 @@ const HomePage = () => {
         />
         <View className="flex items-center absolute -bottom-5 left-[50%] translate-x-[-50%] mb-4">
           <Text className="text-[16px] color-[#f9fafc]">Upcoming event</Text>
-          <Text className="text-[28px] color-[#f9fafc] text-center font-bold">
+          <Text className="text-[28px] color-[#f9fafc] font-DMSANSBOLD  text-center ">
             Above & Beyond {"\n"} #ABGT500
           </Text>
         </View>
