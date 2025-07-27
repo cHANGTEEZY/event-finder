@@ -1,5 +1,5 @@
 import { EventsPageBackground } from "@/assets/images";
-import React, { useState } from "react";
+import React, { useState, version } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Platform,
   Dimensions,
   KeyboardAvoidingView,
+  Pressable,
 } from "react-native";
 import {
   SafeAreaView,
@@ -17,17 +18,27 @@ import {
 import { SwipeListView } from "react-native-swipe-list-view";
 import { BookMarkedEventsData } from "@/constants/BookMarkedEvents";
 import Card from "@/components/Card";
-import HapticButton from "@/components/HapticButton";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Haptics from "expo-haptics";
 import Header from "@/components/Header";
 import BottomDrawer from "@/components/BottomDrawer";
 import EventForm from "@/components/EventComponents/EventForm";
+import Toast from "react-native-toast-message";
+import { LayoutAnimation, UIManager } from "react-native";
+import { Layout } from "react-native-reanimated";
+
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const height = Dimensions.get("screen").height;
 
 export default function App() {
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+  const [eventData, setEventData] = useState(BookMarkedEventsData || []);
 
   const inset = useSafeAreaInsets();
   const paddingBottom = Platform.OS === "ios" ? 100 : 120;
@@ -38,6 +49,15 @@ export default function App() {
 
   const toggleDrawer = () => {
     setIsDrawerVisible((prev) => !prev);
+  };
+
+  const handleRemoveItem = (eventId: string) => {
+    setEventData((prevData) => prevData.filter((item) => item.id !== eventId));
+
+    Toast.show({
+      type: "info",
+      text1: `Removed event of id ${eventId}`,
+    });
   };
 
   return (
@@ -60,53 +80,61 @@ export default function App() {
             righIconPress={toggleDrawer}
           />
 
-          <SwipeListView
-            contentContainerStyle={{
-              paddingBottom: inset.bottom + paddingBottom,
-            }}
-            className="mt-5 pt-5"
-            data={BookMarkedEventsData}
-            disableRightSwipe
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            onRowOpen={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            }}
-            onRowClose={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            }}
-            renderItem={({ item }) => {
-              return (
-                <View className="mb-5">
-                  <Card
-                    key={item.id}
-                    cardStyles={{ height: 138 }}
-                    id={item.id}
-                    image={item.image}
-                    showHeart={false}
-                    showEventLocation={true}
-                    artistName={item.artistName}
-                    eventLocation={item.eventLocation}
-                    showDate={true}
-                    eventData={item.eventData}
-                    showImageBlur
-                  />
+          {eventData && eventData.length > 0 ? (
+            <SwipeListView
+              contentContainerStyle={{
+                paddingBottom: inset.bottom + paddingBottom,
+              }}
+              className="mt-5 pt-5"
+              data={eventData}
+              disableRightSwipe
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              onRowOpen={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              }}
+              onRowClose={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              }}
+              renderItem={({ item }) => {
+                return (
+                  <View className="mb-5">
+                    <Card
+                      key={item.id}
+                      cardStyles={{ height: 138 }}
+                      id={item.id}
+                      image={item.image}
+                      showHeart={false}
+                      showEventLocation={true}
+                      artistName={item.artistName}
+                      eventLocation={item.eventLocation}
+                      showDate={true}
+                      eventData={item.eventData}
+                      showImageBlur
+                    />
+                  </View>
+                );
+              }}
+              renderHiddenItem={({ item }) => (
+                <View className="absolute right-0 h-[138] w-1/4 bg-secondaty mr-1 rounded-[18px]  items-center justify-center">
+                  <Pressable onPress={() => handleRemoveItem(item.id)}>
+                    <Ionicons
+                      name="close-circle-outline"
+                      size={40}
+                      color={"white"}
+                    />
+                  </Pressable>
                 </View>
-              );
-            }}
-            renderHiddenItem={({ item }) => (
-              <View className="absolute right-0 h-[138] w-1/4 bg-secondaty mr-1 rounded-[18px]  items-center justify-center">
-                <HapticButton>
-                  <Ionicons
-                    name="close-circle-outline"
-                    size={40}
-                    color={"white"}
-                  />
-                </HapticButton>
-              </View>
-            )}
-            rightOpenValue={-100}
-          />
+              )}
+              rightOpenValue={-100}
+            />
+          ) : (
+            <View className="flex-1 items-center justify-center">
+              <Text className="text-white text-3xl text-center">
+                No events found
+              </Text>
+            </View>
+          )}
         </SafeAreaView>
 
         <BottomDrawer
