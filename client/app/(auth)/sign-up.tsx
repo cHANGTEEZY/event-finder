@@ -4,6 +4,7 @@ import BottomDrawer from "@/components/BottomDrawer";
 import CustomButton from "@/components/CustomButton";
 import CustomInput from "@/components/CustomInput";
 import Divider from "@/components/Divider";
+import { api } from "@/lib/api";
 import { signUpSchema } from "@/schema/auth-schema";
 import { useSignUp } from "@clerk/clerk-expo";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,11 +17,8 @@ import {
   View,
   StyleSheet,
   Alert,
-  TouchableWithoutFeedback,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  KeyboardAvoidingViewBase,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -69,21 +67,47 @@ const SignUpScreen = () => {
     const lastName = data.lastName;
 
     try {
-      await signUp?.create({
+      const signUpResponse = await signUp?.create({
         emailAddress: email,
         password,
         username,
         firstName,
         lastName,
       });
+      console.log("signUpResponse:", JSON.stringify(signUpResponse, null, 2));
 
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+
+      const userId = signUpResponse?.id;
+
+      if (!signUpResponse || !userId) {
+        throw new Error("Sign up failed. User ID is not available.");
+      }
+
+      if (!userId) {
+        throw new Error("User ID is not available after sign up.");
+      }
+
+      await api.post("/user-detail", {
+        user_id: userId,
+        email,
+        username,
+        first_name: firstName,
+        last_name: lastName,
+      });
+
       setPendingVerification(true);
     } catch (err) {
       Toast.show({
         type: "error",
         text1: "Failed to create account",
-        text2: `${err?.errors[0]?.message}`,
+        text2:
+          err &&
+          typeof err === "object" &&
+          "errors" in err &&
+          Array.isArray((err as any).errors)
+            ? (err as any).errors[0]?.message
+            : String(err),
       });
       console.error(JSON.stringify(err, null, 2));
     } finally {

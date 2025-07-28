@@ -1,11 +1,10 @@
 import axios from "axios";
 import * as SecureStorage from "expo-secure-store";
 import Toast from "react-native-toast-message";
-import { AnyZodTuple } from "zod/v3";
 
 //axios instance
 const apiClient = axios.create({
-  baseURL: process.env.EXPO_API_BASE_URL || "http://localhost:3000/api",
+  baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,
   timeout: 10000, //request timoue in milliseconds
   headers: {
     "Content-Type": "application/json",
