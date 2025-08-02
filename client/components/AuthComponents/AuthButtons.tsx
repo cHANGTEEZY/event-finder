@@ -6,6 +6,7 @@ import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import { useSSO } from "@clerk/clerk-expo";
 import { COLORS } from "@/lib/colors";
+import Toast from "react-native-toast-message";
 
 export const useWarmUpBrowser = () => {
   useEffect(() => {
@@ -39,6 +40,11 @@ const AuthButtons = () => {
       // If sign in was successful, set the active session
       if (createdSessionId) {
         setActive!({ session: createdSessionId });
+        Toast.show({
+          type: "success",
+          text1: "Login Successful",
+          text2: "You are now logged in with Google!",
+        });
       } else {
         // If there is no `createdSessionId`,
         // there are missing requirements, such as MFA

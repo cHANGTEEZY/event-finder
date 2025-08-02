@@ -14,6 +14,8 @@ import z from "zod";
 import CustomButton from "../CustomButton";
 import { ScrollView } from "react-native-gesture-handler";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useCreateEvent } from "@/hooks/api/events/useCreateEvent";
+import Toast from "react-native-toast-message";
 
 type IeventForm = z.infer<typeof eventSchema>;
 
@@ -27,6 +29,7 @@ const EventForm = ({ handleCloseModal }: { handleCloseModal: () => void }) => {
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm<IeventForm>({
     defaultValues: {
       eventName: "",
@@ -37,13 +40,36 @@ const EventForm = ({ handleCloseModal }: { handleCloseModal: () => void }) => {
     },
     resolver: zodResolver(eventSchema),
   });
+  const { mutate, isPending } = useCreateEvent();
 
   const watchedDate = watch("eventDate");
   const watchedTime = watch("eventTime");
 
   const onSubmit = (data: IeventForm) => {
-    console.log(data);
-    handleCloseModal();
+    const payload = { ...data };
+    console.log("Event Data Submitted:", JSON.stringify(payload, null, 2));
+    try {
+      mutate(payload, {
+        onSuccess: () => {
+          Toast.show({
+            type: "success",
+            text1: "Event created",
+            text2: "Your event has been created successfully.",
+          });
+          reset();
+        },
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error creating event",
+        text2: error instanceof Error ? error.message : "Unknown error",
+      });
+      console.error("Error creating event:", error);
+      throw new Error(error instanceof Error ? error.message : "Unknown error");
+    }
+
+    // handleCloseModal();
   };
 
   const formatDate = (date: Date) => {
@@ -188,7 +214,7 @@ const EventForm = ({ handleCloseModal }: { handleCloseModal: () => void }) => {
                 onPress={handleCloseModal}
               />
               <CustomButton
-                buttonText="Create Event"
+                buttonText={isPending ? "Creating..." : "Create Event"}
                 backgroundColor="#4e0189"
                 textColor="white"
                 onPress={handleSubmit(onSubmit)}

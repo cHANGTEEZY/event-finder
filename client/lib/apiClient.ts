@@ -5,7 +5,7 @@ import Toast from "react-native-toast-message";
 //axios instance
 const apiClient = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,
-  timeout: 10000, //request timoue in milliseconds
+  timeout: 10000, //request timout in milliseconds
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -17,7 +17,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   async (config) => {
     try {
-      const token = await SecureStorage.getItemAsync("clerkTone");
+      const token = await SecureStorage.getItemAsync("clerkToken");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

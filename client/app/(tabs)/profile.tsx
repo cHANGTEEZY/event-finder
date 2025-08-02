@@ -57,7 +57,7 @@ const Profile = () => {
               <Text className="text-2xl text-white">
                 {user?.firstName} {user?.lastName}
               </Text>
-              <Text className="text-slate-200">
+              <Text className="text-slate-200 text-center">
                 {user?.emailAddresses[0].emailAddress}
               </Text>
             </View>

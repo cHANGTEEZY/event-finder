@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import Constants from "expo-constants";
 import { useFonts } from "expo-font";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -46,15 +47,18 @@ function AuthGate({ children }: { children: React.ReactNode }) {
 
 export default function RootLayout() {
   const publishableKey = Constants.expoConfig?.extra?.clerkPublishableKey;
+  const queryClient = new QueryClient();
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-        <AuthGate>
-          <StatusBar />
-          <Slot />
-          <Toast />
-        </AuthGate>
+        <QueryClientProvider client={queryClient}>
+          <AuthGate>
+            <StatusBar />
+            <Slot />
+            <Toast />
+          </AuthGate>
+        </QueryClientProvider>
       </ClerkProvider>
     </GestureHandlerRootView>
   );
